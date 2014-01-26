@@ -1,4 +1,4 @@
-package org.shirdrn.activemq.component.executor;
+package org.shirdrn.activemq.executor;
 
 import java.util.Iterator;
 import java.util.Map.Entry;

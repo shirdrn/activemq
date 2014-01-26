@@ -1,30 +1,26 @@
-package org.shirdrn.activemq.component;
-
-import java.io.IOException;
+package org.shirdrn.activemq.producer;
 
 import javax.jms.DeliveryMode;
 import javax.jms.Destination;
 import javax.jms.JMSException;
 import javax.jms.MessageProducer;
 import javax.jms.Session;
-import javax.jms.TextMessage;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.shirdrn.activemq.common.AbstractActiveMQProducer;
 import org.shirdrn.activemq.common.ActiveMQContext;
 
-public class DefaultActiveMQProducer extends AbstractActiveMQProducer {
+public abstract class AbstractSimpleActiveMQProducer<M> extends AbstractActiveMQProducer<M> {
 
-	private static final Log LOG = LogFactory.getLog(DefaultActiveMQProducer.class);
+	private static final Log LOG = LogFactory.getLog(AbstractSimpleActiveMQProducer.class);
 	protected Session session;
-	protected Destination destination;
 	protected MessageProducer messageProducer;
+	private Destination destination;
 	
-	public DefaultActiveMQProducer(ActiveMQContext context) {
+	public AbstractSimpleActiveMQProducer(ActiveMQContext context) {
 		super(context);
 	}
-
+	
 	@Override
 	public void establish() throws JMSException {
 		super.establish();
@@ -33,21 +29,7 @@ public class DefaultActiveMQProducer extends AbstractActiveMQProducer {
 		messageProducer = session.createProducer(destination);
 		int deliveryMode = context.getInt("activemq.delivery.mode", DeliveryMode.NON_PERSISTENT);
 		messageProducer.setDeliveryMode(deliveryMode);
-	}
-
-	@Override
-	public void close() throws IOException {
-		super.close();
-	}
-
-	@Override
-	public void push(String message) {
-		try {
-			TextMessage textMessage = session.createTextMessage(message);
-			messageProducer.send(destination, textMessage);
-		} catch (JMSException e) {
-			e.printStackTrace();
-		}
+		LOG.info("Config: deliveryMode = " + deliveryMode);
 	}
 
 }

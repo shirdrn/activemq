@@ -1,4 +1,4 @@
-package org.shirdrn.activemq.component.sm;
+package org.shirdrn.activemq.sessionmanager;
 
 import java.io.IOException;
 import java.util.Iterator;
@@ -10,7 +10,6 @@ import javax.jms.Destination;
 import javax.jms.JMSException;
 import javax.jms.Session;
 
-import org.shirdrn.activemq.common.AbstractSessionManager;
 import org.shirdrn.activemq.common.ConnectionManager;
 
 public class DefaultSessionManager extends AbstractSessionManager {

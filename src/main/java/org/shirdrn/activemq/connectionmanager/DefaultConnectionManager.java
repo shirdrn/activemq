@@ -1,11 +1,10 @@
-package org.shirdrn.activemq.component.cm;
+package org.shirdrn.activemq.connectionmanager;
 
 import java.io.IOException;
 
 import javax.jms.Connection;
 import javax.jms.JMSException;
 
-import org.shirdrn.activemq.common.AbstractConnectionManager;
 import org.shirdrn.activemq.common.ActiveMQClient;
 
 public class DefaultConnectionManager extends AbstractConnectionManager {

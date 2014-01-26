@@ -1,9 +1,8 @@
 package org.shirdrn.activemq.common;
 
-import javax.jms.Message;
 
-public interface ActiveMQConsumer extends ActiveMQClient {
+public interface ActiveMQConsumer<M> extends ActiveMQClient, MessageHandlerConfigurable<M> {
 
-	Message pull();
+	Result<M> consume();
 	
 }

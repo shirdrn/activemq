@@ -1,4 +1,4 @@
-package org.shirdrn.activemq.component;
+package org.shirdrn.activemq.producer;
 
 import java.io.IOException;
 import java.util.concurrent.ExecutorService;
@@ -13,46 +13,54 @@ import org.junit.Before;
 import org.junit.Test;
 import org.shirdrn.activemq.common.ActiveMQContext;
 import org.shirdrn.activemq.common.ActiveMQProducer;
+import org.shirdrn.activemq.common.MessageHandleException;
+import org.shirdrn.activemq.common.MessageHandler;
 import org.shirdrn.activemq.conext.ContextReadable;
 import org.shirdrn.activemq.conext.DefaultActiveMQContext;
 import org.shirdrn.activemq.conext.PropertiesConfiguration;
+import org.shirdrn.activemq.producer.ActiveMQTextProducer;
 
-public class TestDefaultActiveMQProducer {
+public class TestActiveMQTextProducer {
 
-	private static final Log LOG = LogFactory.getLog(TestDefaultActiveMQProducer.class);
+	private static final Log LOG = LogFactory.getLog(TestActiveMQTextProducer.class);
 	ActiveMQContext context;
-	ActiveMQProducer activeMQProducer;
+	ActiveMQProducer<String> producer;
 	
 	@Before
 	public void initialize() {
 		ContextReadable ctx = new PropertiesConfiguration("activemq.properties");
 		context = new DefaultActiveMQContext(ctx);
-		activeMQProducer = this.newProducer();
+		producer = this.newProducer();
 	}
 	
-	private ActiveMQProducer newProducer() {
-		return new DefaultActiveMQProducer(context);
+	private ActiveMQProducer<String> newProducer() {
+		return new ActiveMQTextProducer(context);
 	}
 	
 	@Test
-	public void push() throws JMSException, InterruptedException, IOException {
-		activeMQProducer.establish();
-		for (int i = 1000; i < 1500; i++) {
+	public void produce() throws JMSException, InterruptedException, IOException {
+		producer.establish();
+		producer.setMessageHandler(new MessageHandler<String>() {
+			@Override
+			public void handle(String message) throws MessageHandleException {
+				LOG.info("Produce message: " + message);
+			}
+		});
+		for (int i = 1000; i < 1200; i++) {
 			String message = "xxxxxxxxxxx-" + i;
-			activeMQProducer.push(message);
-			LOG.info("Push message: " + message);
-			Thread.sleep(100);
+			producer.produce(message);
 		}
-		activeMQProducer.close();
+		producer.close();
 	}
 	
 	private AtomicInteger counter = new AtomicInteger(0);
 	
 	@Test
-	public void multiThreadedPush() throws JMSException, InterruptedException, IOException {
+	public void multiThreadedProduce() throws JMSException, InterruptedException, IOException {
 		int total = 300;
 		int workers = 3;
-		ActiveMQProducer[] producers = new ActiveMQProducer[workers];
+		@SuppressWarnings("unchecked")
+		ActiveMQProducer<String>[] producers = new ActiveMQProducer[workers];
 		for (int i = 0; i < producers.length; i++) {
 			producers[i] = newProducer();
 			producers[i].establish();
@@ -60,14 +68,14 @@ public class TestDefaultActiveMQProducer {
 		ExecutorService pool = Executors.newFixedThreadPool(workers);
 		
 		for (int i = 0; i < total; i++) {
-			final ActiveMQProducer producer = getProducer(i, producers);
+			final ActiveMQProducer<String> producer = getProducer(i, producers);
 			final String message = "xxxxxxxxxxx-" + i;
 			pool.execute(new Runnable() {
 
 				@Override
 				public void run() {
-					producer.push(message);
-					LOG.info(Thread.currentThread().getId() + ": Push message: " + message);
+					producer.produce(message);
+					LOG.info(Thread.currentThread().getId() + ": Produce message: " + message);
 					counter.incrementAndGet();
 				}
 				
@@ -81,7 +89,7 @@ public class TestDefaultActiveMQProducer {
 		}
 	}
 	
-	private ActiveMQProducer getProducer(int id, ActiveMQProducer[] producers) {
+	private ActiveMQProducer<String> getProducer(int id, ActiveMQProducer<String>[] producers) {
 		int workers = producers.length;
 		int index = id % workers;
 		return producers[index];

@@ -1,7 +1,7 @@
 package org.shirdrn.activemq.common;
 
 
-public interface ActiveMQProducer extends ActiveMQClient {
+public interface ActiveMQProducer<M> extends ActiveMQClient, MessageHandlerConfigurable<M> {
 
-	void push(String message);
+	void produce(M message);
 }

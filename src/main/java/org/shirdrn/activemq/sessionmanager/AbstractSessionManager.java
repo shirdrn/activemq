@@ -1,8 +1,12 @@
-package org.shirdrn.activemq.common;
+package org.shirdrn.activemq.sessionmanager;
 
 import javax.jms.Connection;
 import javax.jms.JMSException;
 import javax.jms.Session;
+
+import org.shirdrn.activemq.common.ActiveMQContext;
+import org.shirdrn.activemq.common.ConnectionManager;
+import org.shirdrn.activemq.common.SessionManager;
 
 public abstract class AbstractSessionManager implements SessionManager {
 

@@ -1,4 +1,4 @@
-package org.shirdrn.activemq.component.executor;
+package org.shirdrn.activemq.executor;
 
 import java.io.IOException;
 import java.util.concurrent.BlockingQueue;
