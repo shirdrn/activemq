@@ -21,8 +21,7 @@ public abstract class AbstractConnectionManager implements ConnectionManager {
 	
 	@Override
 	public void close() throws IOException {
-		// TODO Auto-generated method stub
-
+		sessionManager.close();
 	}
 
 	@Override

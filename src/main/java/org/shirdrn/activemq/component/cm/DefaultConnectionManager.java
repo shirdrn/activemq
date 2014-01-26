@@ -1,5 +1,7 @@
 package org.shirdrn.activemq.component.cm;
 
+import java.io.IOException;
+
 import javax.jms.Connection;
 import javax.jms.JMSException;
 
@@ -22,4 +24,13 @@ public class DefaultConnectionManager extends AbstractConnectionManager {
 		return connection;
 	}
 
+	@Override
+	public void close() throws IOException {
+		super.close();
+		try {
+			connection.close();
+		} catch (JMSException e) {
+			e.printStackTrace();
+		}
+	}
 }

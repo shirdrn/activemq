@@ -1,6 +1,8 @@
 package org.shirdrn.activemq.component.sm;
 
 import java.io.IOException;
+import java.util.Iterator;
+import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
@@ -22,7 +24,14 @@ public class DefaultSessionManager extends AbstractSessionManager {
 
 	@Override
 	public void close() throws IOException {
-		super.close();
+		Iterator<Entry<Session, Destination>> iter = sessions.entrySet().iterator();
+		while(iter.hasNext()) {
+			try {
+				iter.next().getKey().close();
+			} catch (JMSException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 	
 	@Override

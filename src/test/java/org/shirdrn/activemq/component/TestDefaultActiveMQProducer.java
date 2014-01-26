@@ -1,7 +1,9 @@
 package org.shirdrn.activemq.component;
 
+import java.io.IOException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.jms.JMSException;
 
@@ -33,7 +35,7 @@ public class TestDefaultActiveMQProducer {
 	}
 	
 	@Test
-	public void push() throws JMSException, InterruptedException {
+	public void push() throws JMSException, InterruptedException, IOException {
 		activeMQProducer.establish();
 		for (int i = 1000; i < 1500; i++) {
 			String message = "xxxxxxxxxxx-" + i;
@@ -41,10 +43,14 @@ public class TestDefaultActiveMQProducer {
 			LOG.info("Push message: " + message);
 			Thread.sleep(100);
 		}
+		activeMQProducer.close();
 	}
 	
+	private AtomicInteger counter = new AtomicInteger(0);
+	
 	@Test
-	public void multiThreadedPush() throws JMSException, InterruptedException {
+	public void multiThreadedPush() throws JMSException, InterruptedException, IOException {
+		int total = 300;
 		int workers = 3;
 		ActiveMQProducer[] producers = new ActiveMQProducer[workers];
 		for (int i = 0; i < producers.length; i++) {
@@ -53,7 +59,7 @@ public class TestDefaultActiveMQProducer {
 		}
 		ExecutorService pool = Executors.newFixedThreadPool(workers);
 		
-		for (int i = 0; i < 1500; i++) {
+		for (int i = 0; i < total; i++) {
 			final ActiveMQProducer producer = getProducer(i, producers);
 			final String message = "xxxxxxxxxxx-" + i;
 			pool.execute(new Runnable() {
@@ -62,12 +68,16 @@ public class TestDefaultActiveMQProducer {
 				public void run() {
 					producer.push(message);
 					LOG.info(Thread.currentThread().getId() + ": Push message: " + message);
+					counter.incrementAndGet();
 				}
 				
 			});
 		}
-		synchronized(pool) {
-			pool.wait();
+		
+		while(counter.get() < total);
+		
+		for (int i = 0; i < producers.length; i++) {
+			producers[i].close();
 		}
 	}
 	

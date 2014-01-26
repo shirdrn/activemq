@@ -31,6 +31,12 @@ public abstract class AbstractActiveMQClient implements ActiveMQClient {
 	}
 	
 	@Override
+	public void establish() throws JMSException {
+		Connection connection = connectionManager.getConnection();
+		connection.start();
+	}
+	
+	@Override
 	public ActiveMQContext getContext() {
 		return context;
 	}
@@ -60,10 +66,4 @@ public abstract class AbstractActiveMQClient implements ActiveMQClient {
 		return connectionFactory;
 	}
 
-	@Override
-	public void establish() throws JMSException {
-		Connection connection = connectionManager.getConnection();
-		connection.start();
-	}
-	
 }
