@@ -37,7 +37,7 @@ public abstract class AbstractActiveMQClient implements ActiveMQClient {
 		connectionFactory = new ActiveMQConnectionFactory(userName, password, brokerURL);
 		connectionManager = ReflectionUtils.getInstance(cmClass, ConnectionManager.class, this.getClass().getClassLoader(), this);
 		
-		String handlerExecutorFactoryClass = context.getConfig().get("activemq.handler.executor.factory.class", "org.shirdrn.activemq.executor.DefaultExecutorFactory");
+		String handlerExecutorFactoryClass = context.getConfig().get("activemq.executor.factory.class", "org.shirdrn.activemq.executor.DefaultExecutorFactory");
 		LOG.info("Client config: executor.factory.class = " + handlerExecutorFactoryClass);
 		executorFactory = ReflectionUtils.getInstance(handlerExecutorFactoryClass, ExecutorFactory.class, this.getClass().getClassLoader());
 		executor = executorFactory.get(context.getConfig());
