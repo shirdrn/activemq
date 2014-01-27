@@ -1,7 +1,10 @@
 package org.shirdrn.activemq.common;
 
+import javax.jms.Message;
 
-public interface ActiveMQProducer<M> extends ActiveMQClient, MessageHandlerConfigurable<M> {
+public interface ActiveMQProducer<IN, OUT extends Message> extends ActiveMQClient {
 
-	void produce(M message);
+	Result<OUT> produce(IN message);
+	void setMessageHandler(MessageHandler<IN, OUT> messageHandler);
+	MessageHandler<IN, OUT> getMessageHandler();
 }

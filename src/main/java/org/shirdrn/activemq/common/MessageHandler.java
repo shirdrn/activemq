@@ -1,7 +1,8 @@
 package org.shirdrn.activemq.common;
 
+import javax.jms.JMSException;
 
-public interface MessageHandler<M> {
+public interface MessageHandler<IN, OUT> {
 
-	void handle(M message) throws MessageHandleException;
+	OUT handle(IN message) throws JMSException;
 }

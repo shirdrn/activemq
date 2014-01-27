@@ -19,8 +19,8 @@ public abstract class AbstractSessionManager implements SessionManager {
 	}
 	
 	protected Session newSession() throws JMSException {
-		boolean transacted = context.getBoolean("activemq.session.transacted", false);
-		int acknowledgeMode = context.getInt("activemq.session.transacted", Session.AUTO_ACKNOWLEDGE);
+		boolean transacted = context.getConfig().getBoolean("activemq.session.transacted", false);
+		int acknowledgeMode = context.getConfig().getInt("activemq.session.transacted", Session.AUTO_ACKNOWLEDGE);
 		Connection connection = connectionManager.getConnection();
 		return connection.createSession(transacted, acknowledgeMode);
 	}

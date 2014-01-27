@@ -18,7 +18,7 @@ public abstract class AbstractConnectionManager implements ConnectionManager {
 	public AbstractConnectionManager(ActiveMQClient activeMQClient) {
 		this.activeMQClient = activeMQClient;
 		this.connectionFactory = activeMQClient.getConnectionFactory();
-		String smClass = activeMQClient.getContext().get("activemq.session.manager.class", "org.shirdrn.activemq.sessionmanager.DefaultSessionManager");
+		String smClass = activeMQClient.getContext().getConfig().get("activemq.session.manager.class", "org.shirdrn.activemq.sessionmanager.DefaultSessionManager");
 		sessionManager = ReflectionUtils.getInstance(smClass, SessionManager.class, this.getClass().getClassLoader(), this);
 	}
 	

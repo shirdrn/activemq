@@ -3,7 +3,7 @@ package org.shirdrn.activemq.handler;
 import org.shirdrn.activemq.common.ActiveMQContext;
 import org.shirdrn.activemq.common.MessageHandler;
 
-public abstract class AbstractMessageHandler<M> implements MessageHandler<M> {
+public abstract class AbstractMessageHandler<IN, OUT> implements MessageHandler<IN, OUT> {
 
 	protected final ActiveMQContext context;
 	

@@ -38,7 +38,7 @@ public class DefaultSessionManager extends AbstractSessionManager {
 		Session session = null;
 		try {
 			session = super.newSession();
-			String queueName = context.get("activemq.queue.name");
+			String queueName = context.getConfig().get("activemq.queue.name");
 			Destination destination = session.createQueue(queueName);
 			sessions.putIfAbsent(session, destination);
 		} catch (JMSException e) {

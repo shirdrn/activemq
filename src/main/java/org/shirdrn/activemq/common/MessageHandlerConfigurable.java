@@ -1,8 +1,7 @@
 package org.shirdrn.activemq.common;
 
+public interface MessageHandlerConfigurable<IN, OUT> {
 
-public interface MessageHandlerConfigurable<M> {
-
-	void setMessageHandler(MessageHandler<M> messageHandler);
-	MessageHandler<M> getMessageHandler();
+	void setMessageHandler(MessageHandler<IN, OUT> messageHandler);
+	MessageHandler<IN, OUT> getMessageHandler();
 }
