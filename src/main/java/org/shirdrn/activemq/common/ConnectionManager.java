@@ -8,6 +8,6 @@ public interface ConnectionManager extends Closeable {
 
 	Connection getConnection();
 	SessionManager getSessionManager();
-	ActiveMQClient getActiveMQClient();
+	ActiveMQClient getClient();
 	
 }

@@ -1,6 +1,7 @@
 package org.shirdrn.activemq.sessionmanager;
 
 import javax.jms.Connection;
+import javax.jms.Destination;
 import javax.jms.JMSException;
 import javax.jms.Session;
 
@@ -15,7 +16,7 @@ public abstract class AbstractSessionManager implements SessionManager {
 	
 	public AbstractSessionManager(ConnectionManager connectionManager) {
 		this.connectionManager = connectionManager;
-		context = connectionManager.getActiveMQClient().getContext();
+		context = connectionManager.getClient().getContext();
 	}
 	
 	protected Session newSession() throws JMSException {
@@ -24,5 +25,7 @@ public abstract class AbstractSessionManager implements SessionManager {
 		Connection connection = connectionManager.getConnection();
 		return connection.createSession(transacted, acknowledgeMode);
 	}
+	
+	protected abstract Destination newDestination(Session session);
 	
 }
